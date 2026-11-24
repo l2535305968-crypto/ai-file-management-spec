@@ -1,0 +1,21 @@
+# Python & Virtualenv
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Environment & Secrets
+.env
+.env.*
+*.pem
+*.key
+
+# Temporary & Local Archive Directories (per AI文件管理规范.md)
+_tmp/
+_archive/
+
+# Local private/scratch files excluded from public Git
+1.txt
+案例_酒店差评短剧盘点.md
