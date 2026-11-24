@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="620" viewBox="0 0 1120 620" role="img" aria-label="视频制作项目应用 AI 文件管理规范前后对比案例图">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="redBadge" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#f97316"/>
+    </linearGradient>
+    <linearGradient id="greenBadge" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+    <style>
+      .title { font: 700 22px "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif; fill: #f8fafc; }
+      .subtitle { font: 400 13px "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif; fill: #94a3b8; }
+      .card-title { font: 700 16px "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif; fill: #f1f5f9; }
+      .badge-text { font: 700 12px "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif; fill: #ffffff; }
+      .mono { font: 400 13px "Consolas", "Microsoft YaHei", monospace; fill: #e2e8f0; }
+      .mono-dim { font: 400 12px "Consolas", "Microsoft YaHei", monospace; fill: #94a3b8; }
+      .mono-red { font: 600 13px "Consolas", "Microsoft YaHei", monospace; fill: #fca5a5; }
+      .mono-green { font: 600 13px "Consolas", "Microsoft YaHei", monospace; fill: #6ee7b7; }
+      .mono-cyan { font: 600 13px "Consolas", "Microsoft YaHei", monospace; fill: #67e8f9; }
+      .pill-red { font: 600 11px "Microsoft YaHei", "PingFang SC", sans-serif; fill: #fecaca; }
+      .pill-green { font: 600 11px "Microsoft YaHei", "PingFang SC", sans-serif; fill: #a7f3d0; }
+      .footer { font: 500 12px "Microsoft YaHei", "PingFang SC", sans-serif; fill: #cbd5e1; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1120" height="620" rx="16" fill="url(#bg)"/>
+
+  <!-- Header -->
+  <text x="40" y="48" class="title">案例实景：AI 短剧 / 视频制作项目应用规范前后对比（脱敏示例）</text>
+  <text x="40" y="72" class="subtitle">典型痛点：多轮分镜重构 + 即梦画布整改 + 剪辑反复导出，导致目录膨胀、多个“最终版”并存、无法确认可看成片</text>
+
+  <!-- Left Panel: Before -->
+  <g filter="url(#shadow)">
+    <rect x="40" y="96" width="490" height="444" rx="12" fill="#111827" stroke="#334155" stroke-width="1.5"/>
+  </g>
+  <!-- Window dots -->
+  <circle cx="62" cy="118" r="5" fill="#ef4444"/>
+  <circle cx="80" cy="118" r="5" fill="#f59e0b"/>
+  <circle cx="98" cy="118" r="5" fill="#22c55e"/>
+  <rect x="122" y="106" width="122" height="24" rx="12" fill="url(#redBadge)"/>
+  <text x="136" y="122" class="badge-text">整理前 · 常见失控</text>
+  <text x="260" y="123" class="subtitle">724+ 文件 · 19 个日期目录</text>
+  <line x1="40" y1="140" x2="530" y2="140" stroke="#1f2937" stroke-width="1.5"/>
+
+  <!-- Left tree content -->
+  <text x="60" y="170" class="mono">视频制作项目/</text>
+  <text x="60" y="198" class="mono-red">├── 00_原始模板/  (158 文件：原稿+快照混放)</text>
+  <text x="60" y="224" class="mono-dim">│   └── 20261115_R4重构前/  (含冲突 R4 剧本)</text>
+  <text x="60" y="252" class="mono-red">├── 01_剧本与分镜/</text>
+  <text x="60" y="278" class="mono-red">│   ├── 分镜表_40秒.xlsx  ❌ 4 处同名副本</text>
+  <text x="60" y="304" class="mono-red">│   └── 分镜表_R4_42秒_final.xlsx  ❌ 模糊后缀</text>
+  <text x="60" y="332" class="mono-red">├── work/  (19 个日期目录 · 358 个中间文件)</text>
+  <text x="60" y="358" class="mono-dim">│   ├── 20261115_R4_分镜重构/final.xlsx</text>
+  <text x="60" y="384" class="mono-dim">│   └── 20261116_画布整改/ (审看片藏在临时区)</text>
+  <text x="60" y="412" class="mono-red">└── 05_最终成片/</text>
+  <text x="60" y="438" class="mono-red">    ├── 40秒完整样品.mov  ❌ 实测 59.22 秒</text>
+  <text x="60" y="464" class="mono-red">    └── 时间线1_配音重制_40秒.mp4  ❓ 未验收</text>
+
+  <!-- Left problem callout -->
+  <rect x="60" y="484" width="450" height="40" rx="8" fill="#450a0a" stroke="#991b1b" stroke-width="1"/>
+  <text x="76" y="509" class="pill-red">痛点：入口过期、真假成品难辨、临时目录只进不出、误删风险高</text>
+
+  <!-- Arrow -->
+  <g transform="translate(542, 298)">
+    <rect x="0" y="0" width="36" height="36" rx="18" fill="#0ea5e9"/>
+    <path d="M11 18 H25 M19 12 L25 18 L19 24" stroke="#ffffff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Right Panel: After -->
+  <g filter="url(#shadow)">
+    <rect x="590" y="96" width="490" height="444" rx="12" fill="#111827" stroke="#0f766e" stroke-width="1.5"/>
+  </g>
+  <circle cx="612" cy="118" r="5" fill="#ef4444"/>
+  <circle cx="630" cy="118" r="5" fill="#f59e0b"/>
+  <circle cx="648" cy="118" r="5" fill="#22c55e"/>
+  <rect x="672" y="106" width="144" height="24" rx="12" fill="url(#greenBadge)"/>
+  <text x="685" y="122" class="badge-text">接入规范 &amp; API 后</text>
+  <text x="830" y="123" class="subtitle">唯一入口 · 可追溯 · 防误删</text>
+  <line x1="590" y1="140" x2="1080" y2="140" stroke="#1f2937" stroke-width="1.5"/>
+
+  <!-- Right tree content -->
+  <text x="610" y="170" class="mono">视频制作项目/</text>
+  <text x="610" y="198" class="mono-cyan">├── 00_项目说明.md  ★ 唯一入口清单（版本+进度）</text>
+  <text x="610" y="226" class="mono-green">├── 01_剧本与分镜/</text>
+  <text x="610" y="252" class="mono-green">│   ├── 正式分镜表.xlsx  ✅ 原位更新（无 _final）</text>
+  <text x="610" y="278" class="mono-dim">│   └── 执行剧本与时间线.json  (编辑源)</text>
+  <text x="610" y="306" class="mono-green">├── 04_剪辑工程/  (合成说明 + 工程源)</text>
+  <text x="610" y="334" class="mono-green">├── 05_最终成片/</text>
+  <text x="610" y="360" class="mono-green">│   └── 短剧正片_40s.mp4  ✅ 验收后原位接替</text>
+  <text x="610" y="388" class="mono-cyan">├── _archive/  (API 自动归档 + SHA-256 索引)</text>
+  <text x="610" y="414" class="mono-dim">│   ├── 01_剧本与分镜/正式分镜表_v01_20261115.xlsx</text>
+  <text x="610" y="440" class="mono-dim">│   └── archive_index.jsonl  (替代关系+哈希)</text>
+  <text x="610" y="466" class="mono-dim">└── _tmp/  (脚本/审看渲染图，交付后清空，不进 Git)</text>
+
+  <!-- Right benefit callout -->
+  <rect x="610" y="484" width="450" height="40" rx="8" fill="#064e3b" stroke="#059669" stroke-width="1"/>
+  <text x="624" y="509" class="pill-green">收益：秒找当前成品 · API 拦截命名越界 · 旧版可按哈希一键还原</text>
+
+  <!-- Bottom summary bar -->
+  <rect x="40" y="556" width="1040" height="44" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="60" y="583" class="footer">API 校验联动：POST /api/v1/validate/path（拦截 _final 与路径穿越）  ·  POST /api/v1/archive（安全归档禁删）  ·  POST /api/v1/security/scan（上架前扫敏）</text>
+</svg>
