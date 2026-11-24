@@ -11,8 +11,12 @@ from fastapi import Depends, FastAPI, Header, HTTPException, status
 from pydantic import BaseModel, Field
 
 from app.security import (
+    ReferenceConflictError,
+    RollbackError,
     SecurityBoundaryError,
+    plan_relocate_file,
     safe_archive_file,
+    safe_relocate_file,
     scan_workspace_security,
     validate_path_compliance,
 )
@@ -51,8 +55,8 @@ def _extract_short_prompt(markdown_text: str) -> str:
 
 app = FastAPI(
     title="AI File Management Spec API",
-    version="2.1.0",
-    description="HTTP API for serving AI文件管理规范.md, enforcing path/naming security boundaries, safe archiving, and pre-Git security scanning.",
+    version="2.2.0",
+    description="HTTP API for serving AI文件管理规范.md, enforcing path/naming security boundaries, same-name relocation with reference checks, safe archiving with rollback, and pre-Git security scanning.",
 )
 
 
@@ -74,13 +78,28 @@ class ArchiveRequest(BaseModel):
     )
 
 
+class RelocatePreviewRequest(BaseModel):
+    source_path: str = Field(..., description="Source file path relative to workspace root.")
+    target_dir: str = Field(..., description="Existing destination directory relative to workspace root.")
+
+
+class RelocateRequest(BaseModel):
+    source_path: str = Field(..., description="Source file path relative to workspace root.")
+    target_dir: str = Field(..., description="Existing destination directory relative to workspace root.")
+    reason: str = Field(..., min_length=1, max_length=300, description="Why this file is being relocated.")
+    allow_with_references: bool = Field(
+        default=False,
+        description="Must be true to relocate a file that still has detected workspace references.",
+    )
+
+
 class SecurityScanRequest(BaseModel):
     target_subpath: str = Field(default=".", description="Subpath relative to workspace root to scan.")
 
 
 @app.get("/health")
 def health() -> dict[str, str]:
-    return {"status": "ok", "version": "2.1.0"}
+    return {"status": "ok", "version": "2.2.0"}
 
 
 @app.get("/api/v1/spec", dependencies=[Depends(verify_api_key)])
@@ -90,7 +109,7 @@ def get_spec() -> dict[str, Any]:
     content = SPEC_PATH.read_text(encoding="utf-8")
     return {
         "title": "AI 文件管理规范",
-        "version": "2.1",
+        "version": "2.2",
         "filename": SPEC_PATH.name,
         "content": content,
     }
@@ -102,7 +121,7 @@ def get_short_prompt() -> dict[str, str]:
         raise HTTPException(status_code=404, detail="Specification file not found.")
     content = SPEC_PATH.read_text(encoding="utf-8")
     prompt = _extract_short_prompt(content)
-    return {"version": "2.1", "prompt": prompt}
+    return {"version": "2.2", "prompt": prompt}
 
 
 @app.post("/api/v1/validate/path", dependencies=[Depends(verify_api_key)])
@@ -135,6 +154,48 @@ def archive_file(req: ArchiveRequest) -> dict[str, Any]:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
     except FileNotFoundError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except RollbackError as exc:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
+
+
+@app.post("/api/v1/relocate/preview", dependencies=[Depends(verify_api_key)])
+def preview_relocate(req: RelocatePreviewRequest) -> dict[str, Any]:
+    try:
+        return plan_relocate_file(
+            workspace_root=get_workspace_root(),
+            source_path=req.source_path,
+            target_dir=req.target_dir,
+        )
+    except SecurityBoundaryError as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+
+
+@app.post("/api/v1/relocate", dependencies=[Depends(verify_api_key)])
+def relocate_file(req: RelocateRequest) -> dict[str, Any]:
+    try:
+        record = safe_relocate_file(
+            workspace_root=get_workspace_root(),
+            source_path=req.source_path,
+            target_dir=req.target_dir,
+            reason=req.reason,
+            allow_with_references=req.allow_with_references,
+        )
+        return {"relocated": True, "record": record}
+    except SecurityBoundaryError as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+    except FileExistsError as exc:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
+    except ReferenceConflictError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail={"message": str(exc), "references": exc.references},
+        ) from exc
+    except RollbackError as exc:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
 
 
 @app.post("/api/v1/security/scan", dependencies=[Depends(verify_api_key)])
